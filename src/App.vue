@@ -1,47 +1,61 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { ref, onMounted } from 'vue';
+import { useDrag, useMove } from '@vueuse/gesture';
+import {  useMotion } from '@vueuse/motion';
+
+const swipeArea = ref<HTMLElement>();
+
+const { set } = useMotion(swipeArea, {
+  x: 0,
+  y: 0,
+});
+
+
+// Ensure the drag gesture is initialized after the DOM is ready
+useMove(({offset, last, event}) => {
+  if (!offset) return;
+  const boxRect = swipeArea.value?.getBoundingClientRect()
+  
+  const [offsetX, offsetY] = offset;
+  if (!boxRect) return;
+  const x = event.pageX - boxRect.left - boxRect.width / 2
+  const y = event.pageY - boxRect.top - boxRect.height / 2
+
+
+  // console.log(`x: ${x}, y: ${y}`);
+  set({x, y})
+
+  if (last) {
+    if (offsetX > 50) {
+      console.log('Swiped Right');
+    } else if (offsetX < -50) {
+      console.log('Swiped Left');
+    }
+  }
+}, {
+  domTarget: swipeArea,
+});
 </script>
 
+
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div ref="swipeArea" class="swipe-area" >
+    Swipe Here
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.swipe-area {
+  background-color: red;
+  width: 50px;
+  height: 50px;
+  /* background-color: #f0f0f0; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* user-select: none; */
+  /* Disable text selection */
+  /* touch-action: none; */
+  /* Disable default browser gestures */
 }
 </style>

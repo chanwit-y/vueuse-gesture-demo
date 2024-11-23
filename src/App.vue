@@ -7,7 +7,6 @@ const target = ref<HTMLElement | null>(null)
 const containerWidth = computed(() => container.value?.offsetWidth)
 const left = ref('0')
 const opacity = ref(1)
-// const background = ref('palegreen') 
 const background = ref('white')
 
 const { isSwiping, lengthX, lengthY } = useSwipe(target, {
@@ -34,7 +33,6 @@ const { isSwiping, lengthX, lengthY } = useSwipe(target, {
     }
   },
   onSwipeEnd: (e, direction) => {
-
     if (lengthX.value < 0 && containerWidth.value && (Math.abs(lengthX.value) / containerWidth.value) > 0.5) {
       // background.value = 'palegreen'
       left.value = `${containerWidth.value}px`
@@ -47,6 +45,12 @@ const { isSwiping, lengthX, lengthY } = useSwipe(target, {
       background.value = 'white'
       opacity.value = 1
     }
+
+    setTimeout(() => {
+      left.value = '0'
+      background.value = 'white'
+      opacity.value = 1
+    }, 500)
   }
 })
 

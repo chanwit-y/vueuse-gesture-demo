@@ -60,10 +60,17 @@ const { isSwiping, lengthX, lengthY } = useSwipe(target, {
   }
 })
 
+
+const audioHandler = () => {
+  const audio = new Audio('https://ccysisxnpzqtdmmwacjy.supabase.co/storage/v1/object/public/speech/obsession.mp3')
+  audio.play()
+}
+
 </script>
 
 <template>
   <div class="fram">
+    <button @click="audioHandler">Play</button>
     <p>Hi</p>
     <div ref="container" class="container select-none" :style="{ height }">
       <div ref="target" class="overlay" :class="{ animated: !isSwiping }" :style="{ left, opacity, background }">
